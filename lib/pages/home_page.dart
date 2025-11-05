@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:kinopoisk/domain/usecases/get_now_playing_movies_usecase.dart';
+import 'package:kinopoisk/domain/usecases/get_top_rated_movies_usecase.dart';
+import 'package:kinopoisk/domain/usecases/get_upcoming_movies_usecase.dart';
 import '../data/models/movie.dart';
 import '../data/repositories/movie_repository.dart';
 import '../widgets/movie_list_widget.dart';
+import '../domain/usecases/get_popular_movies_usecase.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,15 +39,15 @@ class _HomePageState extends State<HomePage> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Главная',
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Каталог',
+            label: 'Catalog',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Профиль',
+            label: 'Profile',
           ),
         ],
       ),
@@ -71,23 +75,21 @@ class _MainTabState extends State<MainTab> with SingleTickerProviderStateMixin {
     _tabController = TabController(length: categories.length, vsync: this);
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
   Future<List<Movie>> _loadMovies(String category) {
     final repo = Modular.get<MovieRepository>();
     switch (category) {
       case 'now_playing':
-        return repo.getNowPlaying();
+        final nowPlaying = Modular.get<GetNowPlayingMoviesUseCase>();
+        return nowPlaying();
       case 'popular':
-        return repo.getPopular();
+        final popularMovies = Modular.get<GetPopularMoviesUseCase>();
+        return popularMovies();
       case 'top_rated':
-        return repo.getTopRated();
+        final topRated = Modular.get<GetTopRatedMoviesUseCase>();
+        return topRated();
       case 'upcoming':
-        return repo.getUpcoming();
+        final upcoming = Modular.get<GetUpcomingMoviesUseCase>();
+        return upcoming();
       default:
         return repo.getNowPlaying();
     }
@@ -97,14 +99,48 @@ class _MainTabState extends State<MainTab> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Now Playing'),
-            Tab(text: 'Popular'),
-            Tab(text: 'Top Rated'),
-            Tab(text: 'Upcoming'),
-          ],
+        Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(Icons.movie, size: 32, color: Theme.of(context).colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Kinopoisk',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceVariant,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: TabBar(
+            controller: _tabController,
+            indicator: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            labelColor: Colors.white,
+            unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
+            tabs: const [
+              Tab(text: 'Now Playing'),
+              Tab(text: 'Popular'),
+              Tab(text: 'Top Rated'),
+              Tab(text: 'Upcoming'),
+            ],
+          ),
         ),
         Expanded(
           child: TabBarView(
@@ -117,10 +153,83 @@ class _MainTabState extends State<MainTab> with SingleTickerProviderStateMixin {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (snapshot.hasError) {
-                    return Center(child: Text('Ошибка: \\${snapshot.error}'));
+                    return Center(child: Text('Ошибка: ${snapshot.error}'));
                   }
                   final movies = snapshot.data ?? [];
-                  return MovieListWidget(movies: movies);
+                  return GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.65,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: movies.length,
+                    itemBuilder: (context, index) {
+                      final movie = movies[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Modular.to.pushNamed('/details', arguments: movie.id);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 8,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.network(
+                                  'https://image.tmdb.org/t/p/w300${movie.posterPath}',
+                                  height: 180,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                      color: Colors.grey[300],
+                                      height: 180,
+                                      child: const Center(child: Icon(Icons.broken_image, size: 48)),
+                                    ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  movie.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.star, color: Colors.amber, size: 18),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      movie.voteAverage.toStringAsFixed(1),
+                                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Можно добавить жанры, кнопку избранного и др.
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
                 },
               );
             }).toList(),

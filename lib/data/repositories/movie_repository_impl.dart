@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:kinopoisk/data/models/movie_details.dart';
 import '../models/movie.dart';
 import 'movie_repository.dart';
 
@@ -38,8 +39,8 @@ class MovieRepositoryImpl implements MovieRepository {
   }
 
   @override
-  Future<Movie> getMovieDetails(int id) async {
+  Future<MovieDetails> getMovieDetails(int id) async {
     final response = await dio.get('$baseUrl/movie/$id', queryParameters: {'api_key': apiKey});
-    return Movie.fromJson(response.data);
+    return MovieDetails.fromJson(response.data);
   }
 }

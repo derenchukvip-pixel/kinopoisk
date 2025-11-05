@@ -1,3 +1,5 @@
+import 'package:kinopoisk/data/models/movie_details.dart';
+
 import '../models/movie.dart';
 
 abstract class MovieRepository {
@@ -5,5 +7,5 @@ abstract class MovieRepository {
   Future<List<Movie>> getPopular();
   Future<List<Movie>> getTopRated();
   Future<List<Movie>> getUpcoming();
-  Future<Movie> getMovieDetails(int id);
+  Future<MovieDetails> getMovieDetails(int id);
 }
