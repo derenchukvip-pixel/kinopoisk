@@ -11,50 +11,69 @@ import '../domain/usecases/get_upcoming_movies_usecase.dart';
 import 'package:kinopoisk/core/storage/favorite_service.dart';
 import '../domain/usecases/get_popular_movies_usecase.dart';
 import '../domain/usecases/get_movie_details_usecase.dart';
-
+import '../domain/usecases/get_keywords_usecase.dart';
+import 'package:kinopoisk/pages/search_page.dart';
 
 class AppModule extends Module {
   @override
   void binds(i) {
     // Избранное
     i.addLazySingleton<FavoriteService>(() => FavoriteService());
-      // Регистрируем Dio
-      i.addLazySingleton<Dio>(() => Dio());
-      // Регистрируем MovieRepositoryImpl с Dio
-      i.addLazySingleton<MovieRepository>(
-        () => MovieRepositoryImpl(
-          dio: Modular.get<Dio>(),
-          baseUrl: 'https://api.themoviedb.org/3',
-          apiKey: '5e213c62695f37261e304ffc00a254bb',
-        ),
-      );
-      // Регистрируем GetPopularMoviesUseCase
-      i.addLazySingleton<GetPopularMoviesUseCase>(
-        () => GetPopularMoviesUseCase(Modular.get<MovieRepository>()),
-      );
-      i.addLazySingleton<GetTopRatedMoviesUseCase>(
-        () => GetTopRatedMoviesUseCase(Modular.get<MovieRepository>()),
-      );
-      i.addLazySingleton<GetUpcomingMoviesUseCase>(
-        () => GetUpcomingMoviesUseCase(Modular.get<MovieRepository>()),
-      );
-      i.addLazySingleton<GetNowPlayingMoviesUseCase>(
-        () => GetNowPlayingMoviesUseCase(Modular.get<MovieRepository>()),
-      );
-      i.addLazySingleton<GetMovieDetailsUseCase>(
-        () => GetMovieDetailsUseCase(Modular.get<MovieRepository>()),
-      );
+    // Регистрируем Dio
+    i.addLazySingleton<Dio>(() => Dio());
+    // Регистрируем MovieRepositoryImpl с Dio
+    i.addLazySingleton<MovieRepository>(
+      () => MovieRepositoryImpl(
+        dio: Modular.get<Dio>(),
+        baseUrl: 'https://api.themoviedb.org/3',
+        apiKey: '5e213c62695f37261e304ffc00a254bb',
+      ),
+    );
+    // Регистрируем GetPopularMoviesUseCase
+    i.addLazySingleton<GetPopularMoviesUseCase>(
+      () => GetPopularMoviesUseCase(Modular.get<MovieRepository>()),
+    );
+    i.addLazySingleton<GetTopRatedMoviesUseCase>(
+      () => GetTopRatedMoviesUseCase(Modular.get<MovieRepository>()),
+    );
+    i.addLazySingleton<GetUpcomingMoviesUseCase>(
+      () => GetUpcomingMoviesUseCase(Modular.get<MovieRepository>()),
+    );
+    i.addLazySingleton<GetNowPlayingMoviesUseCase>(
+      () => GetNowPlayingMoviesUseCase(Modular.get<MovieRepository>()),
+    );
+    i.addLazySingleton<GetMovieDetailsUseCase>(
+      () => GetMovieDetailsUseCase(Modular.get<MovieRepository>()),
+    );
+    i.addLazySingleton<GetKeywordsUseCase>(
+      () => GetKeywordsUseCase(Modular.get<MovieRepository>()),
+    );
   }
 
   @override
   void routes(RouteManager r) {
     r.child('/', child: (_) => const HomePage());
-    r.child('/details', child: (context) {
-      final movieId = Modular.args.data as int?;
-      if (movieId == null) {
-        return const Scaffold(body: Center(child: Text('Movie ID not found')));
-      }
-      return MovieDetailsPage(movieId: movieId);
-    });
+    r.child(
+      '/details',
+      child: (context) {
+        final movieId = Modular.args.data as int?;
+        if (movieId == null) {
+          return const Scaffold(
+            body: Center(child: Text('Movie ID not found')),
+          );
+        }
+        return MovieDetailsPage(movieId: movieId);
+      },
+    );
+    r.child(
+      '/search',
+      child: (_) {
+        final args = Modular.args.data as Map<String, dynamic>?;
+        return SearchPage(
+          initialQuery: args?['initialQuery'],
+          initialCategory: args?['initialCategory'],
+        );
+      },
+    );
   }
 }

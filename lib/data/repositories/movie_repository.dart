@@ -8,4 +8,5 @@ abstract class MovieRepository {
   Future<List<Movie>> getTopRated();
   Future<List<Movie>> getUpcoming();
   Future<MovieDetails> getMovieDetails(int id);
+  Future<List<Keyword>> getKeywords(int id);
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import '../data/models/movie_details.dart';
 import '../domain/usecases/get_movie_details_usecase.dart';
+import '../domain/usecases/get_keywords_usecase.dart';
 import '_favorite_button.dart';
 
 class MovieDetailsPage extends StatelessWidget {
@@ -18,26 +19,30 @@ class MovieDetailsPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Загрузка...')),
+            appBar: AppBar(title: const Text('Loading...')),
             body: const Center(child: CircularProgressIndicator()),
           );
         }
         if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Ошибка')),
-            body: Center(child: Text('Ошибка: ${snapshot.error}')),
+            appBar: AppBar(title: const Text('Error')),
+            body: Center(child: Text('Error: ${snapshot.error}')),
           );
         }
         final details = snapshot.data;
         if (details == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Нет данных')),
+            appBar: AppBar(title: const Text('No Data')),
             body: const SizedBox(),
           );
         }
         return Scaffold(
           appBar: AppBar(
-            title: Text(details.title, maxLines: 2, overflow: TextOverflow.ellipsis),
+            title: Text(
+              details.title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () => Modular.to.pop(),
@@ -78,7 +83,10 @@ class MovieDetailsPage extends StatelessWidget {
                     ),
                   ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 8.0,
+                  ),
                   child: Text(
                     details.title,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -88,36 +96,95 @@ class MovieDetailsPage extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 4.0,
+                  ),
                   child: Row(
                     children: [
                       Icon(Icons.star, color: Colors.amber, size: 22),
                       const SizedBox(width: 4),
                       Text(
                         details.voteAverage.toStringAsFixed(1),
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       const SizedBox(width: 16),
                       Icon(Icons.calendar_today, size: 18, color: Colors.grey),
                       const SizedBox(width: 4),
                       Text(
                         details.releaseDate,
-                        style: const TextStyle(fontSize: 16, color: Colors.grey),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 12.0,
+                  ),
                   child: Text(
                     details.overview,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 16),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(fontSize: 16),
                   ),
                 ),
                 // Кнопка избранного
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 8.0,
+                  ),
                   child: FavoriteButton(movieId: details.id),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 8.0,
+                  ),
+                  child: FutureBuilder<List<Keyword>>(
+                    future: Modular.get<GetKeywordsUseCase>()(details.id),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        return Text('Ошибка загрузки ключевых слов', style: TextStyle(color: Colors.red));
+                      }
+                      final keywords = snapshot.data ?? [];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ключевые слова:',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          SizedBox(height: 8),
+                          keywords.isEmpty
+                              ? Text('Нет ключевых слов', style: TextStyle(color: Colors.grey))
+                              : Wrap(
+                                  spacing: 8,
+                                  children: keywords.map((k) => ActionChip(
+                                    label: Text(k.name),
+                                    onPressed: () {
+                                      Modular.to.pushNamed('/search', arguments: {
+                                        'initialQuery': k.name,
+                                        'initialCategory': 'Keyword',
+                                      });
+                                    },
+                                  )).toList(),
+                                ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

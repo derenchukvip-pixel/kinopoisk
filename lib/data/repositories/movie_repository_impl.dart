@@ -43,4 +43,12 @@ class MovieRepositoryImpl implements MovieRepository {
     final response = await dio.get('$baseUrl/movie/$id', queryParameters: {'api_key': apiKey});
     return MovieDetails.fromJson(response.data);
   }
+
+  @override
+  Future<List<Keyword>> getKeywords(int id) async {
+    final response = await dio.get('$baseUrl/movie/$id/keywords', queryParameters: {'api_key': apiKey});
+    final keywordsJson = response.data['keywords'] as List?;
+    if (keywordsJson == null) return [];
+    return keywordsJson.map((k) => Keyword.fromJson(k)).toList();
+  }
 }
