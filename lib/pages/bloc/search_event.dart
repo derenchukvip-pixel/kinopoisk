@@ -1,4 +1,12 @@
 import 'package:equatable/equatable.dart';
+import '../../data/models/filter_options.dart';
+class SearchFilterChanged extends SearchEvent {
+  final FilterOptions filterOptions;
+  const SearchFilterChanged(this.filterOptions);
+
+  @override
+  List<Object?> get props => [filterOptions];
+}
 
 abstract class SearchEvent extends Equatable {
   const SearchEvent();

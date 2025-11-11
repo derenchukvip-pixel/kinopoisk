@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import '../data/models/movie_details.dart';
-import '../domain/usecases/get_movie_details_usecase.dart';
-import '../domain/usecases/get_keywords_usecase.dart';
+import 'package:kinopoisk/data/models/movie_details.dart';
+import 'package:kinopoisk/domain/usecases/get_movie_details_usecase.dart';
+import 'package:kinopoisk/domain/usecases/get_keywords_usecase.dart';
 import '_favorite_button.dart';
 
 class MovieDetailsPage extends StatelessWidget {
@@ -12,10 +12,10 @@ class MovieDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final useCase = Modular.get<GetMovieDetailsUseCase>();
+    final movieDetailsUseCase = Modular.get<GetMovieDetailsUseCase>();
 
     return FutureBuilder<MovieDetails>(
-      future: useCase(movieId),
+      future: movieDetailsUseCase.movieRepository(movieId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -116,9 +116,9 @@ class MovieDetailsPage extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         details.releaseDate,
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.grey,
+                          fontSize: 16,
                         ),
                       ),
                     ],
@@ -142,7 +142,7 @@ class MovieDetailsPage extends StatelessWidget {
                     horizontal: 20.0,
                     vertical: 8.0,
                   ),
-                  child: FavoriteButton(movieId: details.id),
+                    child: FavoriteButton(movieId: details.id),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -150,25 +150,25 @@ class MovieDetailsPage extends StatelessWidget {
                     vertical: 8.0,
                   ),
                   child: FutureBuilder<List<Keyword>>(
-                    future: Modular.get<GetKeywordsUseCase>()(details.id),
+                    future: Modular.get<GetKeywordsUseCase>().movieRepository(details.id),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        return Text('Ошибка загрузки ключевых слов', style: TextStyle(color: Colors.red));
+                        return Text('Error loading keywords', style: TextStyle(color: Colors.red));
                       }
                       final keywords = snapshot.data ?? [];
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Ключевые слова:',
+                            'Keywords:',
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           keywords.isEmpty
-                              ? Text('Нет ключевых слов', style: TextStyle(color: Colors.grey))
+                               ? const Text('No keywords found', style: TextStyle(color: Colors.grey))
                               : Wrap(
                                   spacing: 8,
                                   children: keywords.map((k) => ActionChip(

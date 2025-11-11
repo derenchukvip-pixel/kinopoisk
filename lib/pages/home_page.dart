@@ -3,10 +3,12 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:kinopoisk/domain/usecases/get_now_playing_movies_usecase.dart';
 import 'package:kinopoisk/domain/usecases/get_top_rated_movies_usecase.dart';
 import 'package:kinopoisk/domain/usecases/get_upcoming_movies_usecase.dart';
+import 'package:kinopoisk/domain/usecases/get_popular_movies_usecase.dart';
 import '../data/models/movie.dart';
 import '../data/repositories/movie_repository.dart';
-import '../widgets/movie_list_widget.dart';
-import '../domain/usecases/get_popular_movies_usecase.dart';
+import 'bloc/search_bloc.dart';
+import 'search_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -80,16 +82,16 @@ class _MainTabState extends State<MainTab> with SingleTickerProviderStateMixin {
     switch (category) {
       case 'now_playing':
         final nowPlaying = Modular.get<GetNowPlayingMoviesUseCase>();
-        return nowPlaying();
+        return nowPlaying.movieRepository();
       case 'popular':
         final popularMovies = Modular.get<GetPopularMoviesUseCase>();
-        return popularMovies();
+        return popularMovies.movieRepository();
       case 'top_rated':
         final topRated = Modular.get<GetTopRatedMoviesUseCase>();
-        return topRated();
+        return topRated.movieRepository();
       case 'upcoming':
         final upcoming = Modular.get<GetUpcomingMoviesUseCase>();
-        return upcoming();
+        return upcoming.movieRepository();
       default:
         return repo.getNowPlaying();
     }
@@ -153,7 +155,7 @@ class _MainTabState extends State<MainTab> with SingleTickerProviderStateMixin {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (snapshot.hasError) {
-                    return Center(child: Text('Ошибка: ${snapshot.error}'));
+                    return Center(child: Text('Error: ${snapshot.error}'));
                   }
                   final movies = snapshot.data ?? [];
                   return GridView.builder(
@@ -223,7 +225,7 @@ class _MainTabState extends State<MainTab> with SingleTickerProviderStateMixin {
                                   ],
                                 ),
                               ),
-                              // Можно добавить жанры, кнопку избранного и др.
+                              // You can add genres, favorite button, etc.
                             ],
                           ),
                         ),
@@ -240,12 +242,16 @@ class _MainTabState extends State<MainTab> with SingleTickerProviderStateMixin {
   }
 }
 
+
 class CatalogTab extends StatelessWidget {
   const CatalogTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Каталог и поиск'));
+    return BlocProvider(
+      create: (_) => SearchBloc(),
+      child: const SearchPage(),
+    );
   }
 }
 
@@ -254,6 +260,6 @@ class ProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Профиль'));
+  return Center(child: Text('Profile'));
   }
 }

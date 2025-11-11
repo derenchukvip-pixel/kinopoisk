@@ -13,10 +13,19 @@ import '../domain/usecases/get_popular_movies_usecase.dart';
 import '../domain/usecases/get_movie_details_usecase.dart';
 import '../domain/usecases/get_keywords_usecase.dart';
 import 'package:kinopoisk/pages/search_page.dart';
+import 'package:kinopoisk/data/repositories/search_repository_impl.dart';
+import 'package:kinopoisk/data/repositories/search_repository.dart';
+import 'package:kinopoisk/data/network/tmdb_api_service.dart';
 
 class AppModule extends Module {
   @override
   void binds(i) {
+    // TMDB API сервис для фильтров
+    i.addLazySingleton<TmdbApiService>(() => TmdbApiService(
+      dio: Modular.get<Dio>(),
+      apiKey: '5e213c62695f37261e304ffc00a254bb',
+      baseUrl: 'https://api.themoviedb.org/3',
+    ));
     // Избранное
     i.addLazySingleton<FavoriteService>(() => FavoriteService());
     // Регистрируем Dio
@@ -24,6 +33,14 @@ class AppModule extends Module {
     // Регистрируем MovieRepositoryImpl с Dio
     i.addLazySingleton<MovieRepository>(
       () => MovieRepositoryImpl(
+        dio: Modular.get<Dio>(),
+        baseUrl: 'https://api.themoviedb.org/3',
+        apiKey: '5e213c62695f37261e304ffc00a254bb',
+      ),
+    );
+    // Регистрируем SearchRepositoryImpl с Dio
+    i.addLazySingleton<SearchRepository>(
+      () => SearchRepositoryImpl(
         dio: Modular.get<Dio>(),
         baseUrl: 'https://api.themoviedb.org/3',
         apiKey: '5e213c62695f37261e304ffc00a254bb',

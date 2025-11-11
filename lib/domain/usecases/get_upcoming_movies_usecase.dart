@@ -6,7 +6,7 @@ class GetUpcomingMoviesUseCase {
 
   GetUpcomingMoviesUseCase(this.repository);
 
-  Future<List<Movie>> call() async {
+  Future<List<Movie>> movieRepository() async {
     return await repository.getUpcoming();
   }
 }

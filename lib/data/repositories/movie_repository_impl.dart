@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:kinopoisk/data/models/movie_details.dart';
 import '../models/movie.dart';
 import 'movie_repository.dart';
+import 'package:kinopoisk/data/models/list_response.dart';
 
 class MovieRepositoryImpl implements MovieRepository {
   final Dio dio;
@@ -47,8 +48,13 @@ class MovieRepositoryImpl implements MovieRepository {
   @override
   Future<List<Keyword>> getKeywords(int id) async {
     final response = await dio.get('$baseUrl/movie/$id/keywords', queryParameters: {'api_key': apiKey});
-    final keywordsJson = response.data['keywords'] as List?;
-    if (keywordsJson == null) return [];
-    return keywordsJson.map((k) => Keyword.fromJson(k)).toList();
+    final listResponseJson = {
+      'data': response.data['keywords'] ?? [],
+    };
+    final listResponse = ListResponse<Keyword>.fromJson(
+      listResponseJson,
+      (json) => Keyword.fromJson(json as Map<String, dynamic>),
+    );
+    return listResponse.data;
   }
 }
