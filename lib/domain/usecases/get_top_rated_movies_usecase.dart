@@ -6,7 +6,7 @@ class GetTopRatedMoviesUseCase {
 
   GetTopRatedMoviesUseCase(this.repository);
 
-  Future<List<Movie>> call() async {
+  Future<List<Movie>> movieRepository() async {
     return await repository.getTopRated();
   }
 }

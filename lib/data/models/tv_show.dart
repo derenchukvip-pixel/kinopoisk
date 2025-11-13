@@ -1,9 +1,17 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'tv_show.g.dart';
+
+@JsonSerializable()
 class TVShow {
   final int id;
   final String name;
   final String overview;
+  @JsonKey(name: 'poster_path')
   final String? posterPath;
+  @JsonKey(name: 'first_air_date')
   final String firstAirDate;
+  @JsonKey(name: 'vote_average')
   final double voteAverage;
 
   TVShow({
@@ -15,12 +23,6 @@ class TVShow {
     required this.voteAverage,
   });
 
-  factory TVShow.fromJson(Map<String, dynamic> json) => TVShow(
-        id: json['id'],
-        name: json['name'] ?? '',
-        overview: json['overview'] ?? '',
-        posterPath: json['poster_path'],
-        firstAirDate: json['first_air_date'] ?? '',
-        voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
-      );
+  factory TVShow.fromJson(Map<String, dynamic> json) => _$TVShowFromJson(json);
+  Map<String, dynamic> toJson() => _$TVShowToJson(this);
 }

@@ -1,9 +1,17 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'movie_details.g.dart';
+
+@JsonSerializable()
 class MovieDetails {
   final int id;
   final String title;
   final String overview;
+  @JsonKey(name: 'poster_path')
   final String? posterPath;
+  @JsonKey(name: 'release_date')
   final String releaseDate;
+  @JsonKey(name: 'vote_average')
   final double voteAverage;
   final List<Keyword> keywords;
 
@@ -17,29 +25,17 @@ class MovieDetails {
     required this.keywords,
   });
 
-  factory MovieDetails.fromJson(Map<String, dynamic> json) {
-    return MovieDetails(
-      id: json['id'] as int,
-      title: json['title'] as String? ?? '',
-      overview: json['overview'] as String? ?? '',
-      posterPath: json['poster_path'] as String?,
-      releaseDate: json['release_date'] as String? ?? '',
-      voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
-      keywords: (json['keywords']?['keywords'] as List?)?.map((k) => Keyword.fromJson(k)).toList() ?? [],
-    );
-  }
+  factory MovieDetails.fromJson(Map<String, dynamic> json) => _$MovieDetailsFromJson(json);
+  Map<String, dynamic> toJson() => _$MovieDetailsToJson(this);
 }
 
+@JsonSerializable()
 class Keyword {
   final int id;
   final String name;
 
   Keyword({required this.id, required this.name});
 
-  factory Keyword.fromJson(Map<String, dynamic> json) {
-    return Keyword(
-      id: json['id'] as int,
-      name: json['name'] as String? ?? '',
-    );
-  }
+  factory Keyword.fromJson(Map<String, dynamic> json) => _$KeywordFromJson(json);
+  Map<String, dynamic> toJson() => _$KeywordToJson(this);
 }
