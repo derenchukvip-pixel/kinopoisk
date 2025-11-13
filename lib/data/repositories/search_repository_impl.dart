@@ -23,15 +23,7 @@ class SearchRepositoryImpl implements SearchRepository {
       params['query'] = query;
     }
     // Если есть фильтры, используем discover/movie
-    bool hasFilters = filters != null && (
-      (filters.genreIds.isNotEmpty) ||
-      filters.year != null ||
-      filters.minRating != null ||
-      filters.maxRating != null ||
-      filters.country != null ||
-      filters.language != null ||
-      filters.sortBy != null
-    );
+    bool hasFilters = filters != null && !filters.isDefault;
     if (filters != null) {
       if (filters.genreIds.isNotEmpty) params['with_genres'] = filters.genreIds.join(',');
       if (filters.year != null) params['year'] = filters.year.toString();

@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'filter_options.g.dart';
+
+@JsonSerializable()
 class FilterOptions {
   final List<int> genreIds;
   final int? year;
@@ -17,24 +22,15 @@ class FilterOptions {
     this.sortBy,
   });
 
-  static const _unset = Object();
-  FilterOptions copyWith({
-    List<int>? genreIds,
-    int? year,
-    double? minRating,
-    double? maxRating,
-    Object? country = _unset,
-    Object? language = _unset,
-    Object? sortBy = _unset,
-  }) {
-    return FilterOptions(
-      genreIds: genreIds ?? this.genreIds,
-      year: year ?? this.year,
-      minRating: minRating ?? this.minRating,
-      maxRating: maxRating ?? this.maxRating,
-      country: country == _unset ? this.country : country as String?,
-      language: language == _unset ? this.language : language as String?,
-      sortBy: sortBy == _unset ? this.sortBy : sortBy as String?,
-    );
-  }
+  bool get isDefault =>
+      genreIds.isEmpty &&
+      year == null &&
+      minRating == null &&
+      maxRating == null &&
+      country == null &&
+      language == null &&
+      sortBy == null;
+
+  factory FilterOptions.fromJson(Map<String, dynamic> json) => _$FilterOptionsFromJson(json);
+  Map<String, dynamic> toJson() => _$FilterOptionsToJson(this);
 }

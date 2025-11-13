@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/subjects.dart';
 import 'bloc/search_bloc.dart';
 import 'bloc/search_event.dart';
 import 'bloc/search_state.dart';
@@ -8,6 +9,7 @@ import 'package:kinopoisk/domain/usecases/get_movie_details_usecase.dart';
 import 'package:kinopoisk/data/models/filter_options.dart';
 import 'filter_page.dart';
 import 'package:kinopoisk/data/network/tmdb_api_service.dart';
+
 
 class SearchPage extends StatefulWidget {
   final String? initialQuery;
@@ -19,6 +21,38 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
+// ...existing code...
+ enum SearchCategory { 
+  
+  
+  movie(value: "Movie"), tv(value: "TV");
+  final String value; 
+
+    const SearchCategory({required this.value});
+   }
+// TODO: реализовать SearchBloc корректно. Заглушка для сборки:
+class SearchBloc {
+  SearchBloc();
+}
+
+// TODO: реализовать SearchItem корректно. Заглушка для сборки:
+class SearchItem {
+  final dynamic item;
+  SearchItem(this.item);
+}
+
+
+// TODO: реализовать SeachItemWidget корректно. Заглушка для сборки:
+class SeachItemWidget extends StatelessWidget {
+  const SeachItemWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+
 class _SearchPageState extends State<SearchPage> {
   FilterOptions _filterOptions = FilterOptions();
   List<Map<String, dynamic>> _genres = [];
@@ -27,14 +61,14 @@ class _SearchPageState extends State<SearchPage> {
   List<String> _sortOptions = [];
   bool _filtersLoading = true;
   late TextEditingController _controller;
-  String? _selectedCategory;
+  SearchCategory? _selectedCategory;
   late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.initialQuery ?? '');
-    _selectedCategory = widget.initialCategory ?? 'Movie';
+  _selectedCategory = SearchCategory.movie;
     _scrollController = ScrollController();
     // TODO: trigger search if initialQuery is not null
 
@@ -60,6 +94,9 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    // Удалён некорректный StreamBuilder
+
     return BlocProvider(
       create: (_) => SearchBloc(),
       child: Builder(

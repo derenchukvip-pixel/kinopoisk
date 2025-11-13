@@ -5,6 +5,7 @@ import 'search_event.dart';
 import 'search_state.dart';
 import '../../data/repositories/search_repository.dart';
 import '../../data/models/filter_options.dart';
+import '../../data/models/search_category.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchRepository searchRepository;
@@ -21,7 +22,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<SearchFilterChanged>(_onFilterChanged);
   }
   String _lastQuery = '';
-  String _lastCategory = '';
+  SearchCategory _lastCategory = SearchCategory.movie;
   int _page = 1;
   bool _hasMore = true;
   List<dynamic> _results = [];
@@ -29,7 +30,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Future<void> _onQueryChanged(SearchQueryChanged event, Emitter<SearchState> emit) async {
     emit(SearchLoading());
     _lastQuery = event.query;
-    _lastCategory = event.category;
+    _lastCategory = event.category is SearchCategory
+        ? event.category
+        : SearchCategoryExt.fromString(event.category.toString());
     _page = 1;
     _hasMore = true;
     _results = [];
@@ -45,7 +48,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> _onLoadMore(SearchLoadMore event, Emitter<SearchState> emit) async {
     if (!_hasMore || state is SearchLoading) return;
-    // emit(SearchLoading()); // Не сбрасываем UI, просто догружаем
     try {
       _page++;
       List<dynamic> results = await _searchByCategory(_lastQuery, _lastCategory, _page, filter: _currentFilter);
@@ -61,16 +63,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
   }
 
-  Future<List<dynamic>> _searchByCategory(String query, String category, int page, {FilterOptions? filter}) async {
-    switch (category.toLowerCase()) {
-      case 'movie':
+  Future<List<dynamic>> _searchByCategory(String query, SearchCategory category, int page, {FilterOptions? filter}) async {
+    switch (category) {
+      case SearchCategory.movie:
         return await searchRepository.searchMovies(query, page: page, filters: filter);
-      case 'tv':
+      case SearchCategory.tv:
         return await searchRepository.searchTVShows(query, page: page);
-      case 'keyword':
+      case SearchCategory.keyword:
         return await searchRepository.searchKeywords(query, page: page);
-      default:
-        return [];
     }
   }
 
