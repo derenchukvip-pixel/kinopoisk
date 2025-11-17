@@ -7,7 +7,7 @@ class GetMovieDetailsUseCase {
 
   GetMovieDetailsUseCase(this.repository);
 
-  Future<MovieDetails> call(int id) async {
+  Future<MovieDetails> movieRepository(int id) async {
     return await repository.getMovieDetails(id);
   }
 }

@@ -7,7 +7,7 @@ class GetKeywordsUseCase {
 
   GetKeywordsUseCase(this.repository);
 
-  Future<List<Keyword>> call(int id) async {
+  Future<List<Keyword>> movieRepository(int id) async {
     return await repository.getKeywords(id);
   }
 }

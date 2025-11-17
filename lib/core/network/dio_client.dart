@@ -14,6 +14,7 @@ class CloudClient {
   final String _apiKey;
 
   void _setupClient() {
+    
     _client.options = BaseOptions(
       baseUrl: _baseUrl,
       connectTimeout: const Duration(seconds: 10),
@@ -22,15 +23,13 @@ class CloudClient {
         'Authorization': 'Bearer $_apiKey',
         'Content-Type': 'application/json',
       },
+      queryParameters: {}
     );
   }
 
-  Future<Response> get(String path, {Map<String, dynamic>? query}) async {
-    return _client.get(path, queryParameters: query);
-  }
 
   // Пример метода для получения списка фильмов
   Future<Response> getMoviesList(String category, {int page = 1}) async {
-    return get('/movie/$category', query: {'page': page});
+    return _client.get('/movie/$category', queryParameters: {'page': page});
   }
 }
