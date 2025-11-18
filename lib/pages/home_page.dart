@@ -1,3 +1,4 @@
+import 'package:kinopoisk/features/auth/presentation/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:kinopoisk/domain/usecases/get_now_playing_movies_usecase.dart';
@@ -33,25 +34,27 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Catalog',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        body: _pages[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'Catalog',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -159,12 +162,12 @@ class _MainTabState extends State<MainTab> with SingleTickerProviderStateMixin {
                   }
                   final movies = snapshot.data ?? [];
                   return GridView.builder(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.zero,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 0.65,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 0,
+                      mainAxisSpacing: 0,
                     ),
                     itemCount: movies.length,
                     itemBuilder: (context, index) {
@@ -173,61 +176,48 @@ class _MainTabState extends State<MainTab> with SingleTickerProviderStateMixin {
                         onTap: () {
                           Modular.to.pushNamed('/details', arguments: movie.id);
                         },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 8,
-                                offset: Offset(0, 4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(0),
+                              child: Image.network(
+                                'https://image.tmdb.org/t/p/w300${movie.posterPath}',
+                                height: 180,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                  Container(
+                                    color: Colors.grey[300],
+                                    height: 180,
+                                    child: const Center(child: Icon(Icons.broken_image, size: 48)),
+                                  ),
                               ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: Image.network(
-                                  'https://image.tmdb.org/t/p/w300${movie.posterPath}',
-                                  height: 180,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                    Container(
-                                      color: Colors.grey[300],
-                                      height: 180,
-                                      child: const Center(child: Icon(Icons.broken_image, size: 48)),
-                                    ),
+                            ),
+                            Text(
+                              movie.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.star, color: Colors.amber, size: 18),
+                                const SizedBox(width: 4),
+                                Text(
+                                  movie.voteAverage.toStringAsFixed(1),
+                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  movie.title,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.star, color: Colors.amber, size: 18),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      movie.voteAverage.toStringAsFixed(1),
-                                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // You can add genres, favorite button, etc.
-                            ],
-                          ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              movie.overview,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -248,7 +238,7 @@ class CatalogTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<SearchBloc>(
       create: (_) => SearchBloc(),
       child: const SearchPage(),
     );
@@ -260,6 +250,6 @@ class ProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  return Center(child: Text('Profile'));
+    return const ProfilePage();
   }
 }

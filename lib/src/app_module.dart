@@ -5,14 +5,16 @@ import 'package:kinopoisk/pages/home_page.dart';
 import 'package:kinopoisk/pages/movie_details_page.dart';
 import 'package:kinopoisk/data/repositories/movie_repository.dart';
 import 'package:kinopoisk/data/repositories/movie_repository_impl.dart';
-import '../domain/usecases/get_top_rated_movies_usecase.dart';
-import '../domain/usecases/get_now_playing_movies_usecase.dart';
-import '../domain/usecases/get_upcoming_movies_usecase.dart';
+import 'package:kinopoisk/domain/usecases/get_top_rated_movies_usecase.dart';
+import 'package:kinopoisk/domain/usecases/get_now_playing_movies_usecase.dart';
+import 'package:kinopoisk/domain/usecases/get_upcoming_movies_usecase.dart';
 import 'package:kinopoisk/core/storage/favorite_service.dart';
-import '../domain/usecases/get_popular_movies_usecase.dart';
-import '../domain/usecases/get_movie_details_usecase.dart';
-import '../domain/usecases/get_keywords_usecase.dart';
+import 'package:kinopoisk/domain/usecases/get_popular_movies_usecase.dart';
+import 'package:kinopoisk/domain/usecases/get_movie_details_usecase.dart';
+import 'package:kinopoisk/domain/usecases/get_keywords_usecase.dart';
 import 'package:kinopoisk/pages/search_page.dart';
+import 'package:kinopoisk/features/auth/presentation/login_page.dart';
+import 'package:kinopoisk/features/auth/presentation/profile_page.dart';
 import 'package:kinopoisk/data/repositories/search_repository_impl.dart';
 import 'package:kinopoisk/data/repositories/search_repository.dart';
 import 'package:kinopoisk/data/network/tmdb_api_service.dart';
@@ -69,7 +71,11 @@ class AppModule extends Module {
 
   @override
   void routes(RouteManager r) {
-    r.child('/', child: (_) => const HomePage());
+    r.child(
+      '/profile',
+      child: (_) => const ProfilePage(),
+    );
+  r.child('/', child: (_) => LoginPage());
     r.child(
       '/details',
       child: (context) {
@@ -91,6 +97,10 @@ class AppModule extends Module {
           initialCategory: args?['initialCategory'],
         );
       },
+    );
+    r.child(
+      '/home',
+      child: (_) => const HomePage(),
     );
   }
 }
