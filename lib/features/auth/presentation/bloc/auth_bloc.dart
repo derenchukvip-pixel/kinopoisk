@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/models/auth_user.dart';
-import '../../domain/usecases/login_usecase.dart';
-import '../../domain/usecases/logout_usecase.dart';
+import 'package:kinopoisk/features/auth/data/models/auth_user.dart';
+import 'package:kinopoisk/features/auth/domain/usecases/auth_usecase.dart';
 
 abstract class AuthEvent {}
 class LoginRequested extends AuthEvent {
@@ -25,26 +24,29 @@ class AuthError extends AuthState {
 }
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final LoginUseCase loginUseCase;
-  final LogoutUseCase logoutUseCase;
+  final AuthUseCase authUseCase;
 
-  AuthBloc({required this.loginUseCase, required this.logoutUseCase}) : super(AuthInitial()) {
-    on<LoginRequested>((event, emit) async {
-      emit(AuthLoading());
-      try {
-          final user = await loginUseCase.login(event.email, event.password);
-        if (user != null) {
-          emit(Authenticated(user));
-        } else {
-          emit(AuthError('Invalid credentials'));
-        }
-      } catch (e) {
-        emit(AuthError(e.toString()));
+  AuthBloc({required this.authUseCase}) : super(AuthInitial()) {
+    on<LoginRequested>(_onLoginRequested);
+    on<LogoutRequested>(_onLogoutRequested);
+  }
+
+  Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      final user = await authUseCase.login(event.email, event.password);
+      if (user != null) {
+        emit(Authenticated(user));
+      } else {
+        emit(AuthError('Invalid credentials'));
       }
-    });
-    on<LogoutRequested>((event, emit) async {
-  await logoutUseCase.logout();
-      emit(Unauthenticated());
-    });
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<void> _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
+    await authUseCase.logout();
+    emit(Unauthenticated());
   }
 }
