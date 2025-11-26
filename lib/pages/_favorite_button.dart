@@ -21,7 +21,7 @@ class FavoriteButton extends StatelessWidget {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
           icon: Icon(isFav ? Icons.favorite : Icons.favorite_border),
-          label: Text(isFav ? 'В избранном' : 'В избранное'),
+          label: Text(isFav ? 'Add to favorites' : 'Add to favorites'),
           onPressed: () => favoriteService.toggleFavorite(movieId),
         );
       },

@@ -22,6 +22,26 @@ class FilterOptions {
     this.sortBy,
   });
 
+  FilterOptions copyWith({
+    List<int>? genreIds,
+    int? year,
+    double? minRating,
+    double? maxRating,
+    String? country,
+    String? language,
+    String? sortBy,
+  }) {
+    return FilterOptions(
+      genreIds: genreIds ?? this.genreIds,
+      year: year ?? this.year,
+      minRating: minRating ?? this.minRating,
+      maxRating: maxRating ?? this.maxRating,
+      country: country ?? this.country,
+      language: language ?? this.language,
+      sortBy: sortBy ?? this.sortBy,
+    );
+  }
+
   bool get isDefault =>
       genreIds.isEmpty &&
       year == null &&

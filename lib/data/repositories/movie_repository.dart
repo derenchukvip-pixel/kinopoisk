@@ -1,6 +1,6 @@
 import 'package:kinopoisk/data/models/movie_details.dart';
 
-import '../models/movie.dart';
+import 'package:kinopoisk/data/models/movie.dart';
 
 abstract class MovieRepository {
   Future<List<Movie>> getNowPlaying();

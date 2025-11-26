@@ -1,5 +1,6 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'search_event.dart';
 import 'search_state.dart';
@@ -16,7 +17,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc({SearchRepository? repo})
       : searchRepository = repo ?? Modular.get<SearchRepository>(),
         super(SearchInitial()) {
-    on<SearchQueryChanged>(_onQueryChanged);
+    on<SearchQueryChanged>(
+      _onQueryChanged,
+      transformer: (events, mapper) => events
+          .debounceTime(const Duration(milliseconds: 350))
+          .asyncExpand(mapper),
+    );
     on<SearchLoadMore>(_onLoadMore);
     on<SearchClear>(_onClear);
     on<SearchFilterChanged>(_onFilterChanged);
@@ -30,9 +36,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Future<void> _onQueryChanged(SearchQueryChanged event, Emitter<SearchState> emit) async {
     emit(SearchLoading());
     _lastQuery = event.query;
-    _lastCategory = event.category is SearchCategory
-        ? event.category
-        : SearchCategoryExt.fromString(event.category.toString());
+    _lastCategory = event.category;
     _page = 1;
     _hasMore = true;
     _results = [];
@@ -80,7 +84,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     // Поиск будет запущен вручную после применения фильтра.
   }
   }
-
 
   void _onClear(SearchClear event, Emitter<SearchState> emit) {
     emit(SearchInitial());
