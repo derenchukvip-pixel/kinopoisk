@@ -10,6 +10,8 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
+
+
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -31,6 +33,13 @@ class _LoginPageState extends State<LoginPage> {
       return 'No internet connection.';
     }
     return 'Unknown error: $error';
+  }
+
+    @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
