@@ -5,6 +5,7 @@ import 'package:kinopoisk/domain/usecases/get_now_playing_movies_usecase.dart';
 import 'package:kinopoisk/domain/usecases/get_top_rated_movies_usecase.dart';
 import 'package:kinopoisk/domain/usecases/get_upcoming_movies_usecase.dart';
 import 'package:kinopoisk/domain/usecases/get_popular_movies_usecase.dart';
+import 'package:kinopoisk/l10n/app_localizations.dart';
 import '../data/models/movie.dart';
 import '../data/repositories/movie_repository.dart';
 import 'bloc/search_bloc.dart';
@@ -114,7 +115,7 @@ class _MainTabState extends State<MainTab> with SingleTickerProviderStateMixin {
                   Icon(Icons.movie, size: 32, color: Theme.of(context).colorScheme.primary),
                   const SizedBox(width: 8),
                   Text(
-                    'Kinopoisk',
+                    AppLocalizations.of(context)!.appTitle,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.primary,
@@ -139,11 +140,11 @@ class _MainTabState extends State<MainTab> with SingleTickerProviderStateMixin {
             ),
             labelColor: Colors.white,
             unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
-            tabs: const [
-              Tab(text: 'Now Playing'),
-              Tab(text: 'Popular'),
-              Tab(text: 'Top Rated'),
-              Tab(text: 'Upcoming'),
+            tabs: [
+              Tab(text: AppLocalizations.of(context)!.nowPlaying),
+              Tab(text: AppLocalizations.of(context)!.popular),
+              Tab(text: AppLocalizations.of(context)!.topRated),
+              Tab(text: AppLocalizations.of(context)!.upcoming),
             ],
           ),
         ),

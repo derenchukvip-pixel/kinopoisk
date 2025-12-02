@@ -1,3 +1,6 @@
+import 'package:kinopoisk/features/auth/domain/usecases/auth_usecase.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:kinopoisk/l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,14 +22,23 @@ class AppWidget extends StatelessWidget {
       value: authRepository,
       child: BlocProvider(
         create: (_) => AuthBloc(
-          loginUseCase: LoginUseCase(authRepository),
-          logoutUseCase: LogoutUseCase(authRepository),
+          authUseCase: AuthUseCase(authRepository),
         ),
         child: MaterialApp.router(
           title: 'Kinopoisk',
           theme: ThemeData.dark(useMaterial3: true),
           routeInformationParser: Modular.routeInformationParser,
           routerDelegate: Modular.routerDelegate,
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'),
+            Locale('ru'),
+          ],
         ),
       ),
     );

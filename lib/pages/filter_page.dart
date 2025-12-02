@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kinopoisk/l10n/app_localizations.dart';
 import '../data/models/filter_options.dart';
 import '../data/models/genre.dart';
 import '../data/models/sort_option.dart';
@@ -54,7 +55,7 @@ class _FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Filters'),
+  title: Text(AppLocalizations.of(context)!.filters),
         actions: [
           TextButton(
             onPressed: () {
@@ -64,7 +65,7 @@ class _FilterPageState extends State<FilterPage> {
               });
               widget.onApply(_options);
             },
-            child: const Text('Clear all', style: TextStyle(color: Colors.white)),
+            child: Text(AppLocalizations.of(context)!.clearAll, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -74,7 +75,7 @@ class _FilterPageState extends State<FilterPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Genres', style: Theme.of(context).textTheme.titleMedium),
+              Text(AppLocalizations.of(context)!.genres, style: Theme.of(context).textTheme.titleMedium),
               if (_options.genreIds.isNotEmpty)
                 TextButton(
                   onPressed: () {
@@ -82,7 +83,7 @@ class _FilterPageState extends State<FilterPage> {
                       _options = _options.copyWith(genreIds: []);
                     });
                   },
-                  child: const Text('Clear', style: TextStyle(fontSize: 12)),
+                  child: Text(AppLocalizations.of(context)!.clear, style: const TextStyle(fontSize: 12)),
                 ),
             ],
           ),
@@ -111,7 +112,7 @@ class _FilterPageState extends State<FilterPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Year', style: Theme.of(context).textTheme.titleMedium),
+              Text(AppLocalizations.of(context)!.year, style: Theme.of(context).textTheme.titleMedium),
               if (_options.year != null)
                 TextButton(
                   onPressed: () {
@@ -120,13 +121,13 @@ class _FilterPageState extends State<FilterPage> {
                       _yearController.clear();
                     });
                   },
-                  child: const Text('Clear', style: TextStyle(fontSize: 12)),
+                  child: Text(AppLocalizations.of(context)!.clear, style: const TextStyle(fontSize: 12)),
                 ),
             ],
           ),
           TextField(
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(hintText: 'Year'),
+            decoration: InputDecoration(hintText: AppLocalizations.of(context)!.year),
             controller: _yearController,
             maxLength: 4,
             onChanged: (val) {
@@ -144,7 +145,7 @@ class _FilterPageState extends State<FilterPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Rating', style: Theme.of(context).textTheme.titleMedium),
+              Text(AppLocalizations.of(context)!.rating, style: Theme.of(context).textTheme.titleMedium),
               if ((_options.minRating != null && _options.minRating != 0) || (_options.maxRating != null && _options.maxRating != 10))
                 TextButton(
                   onPressed: () {
@@ -152,7 +153,7 @@ class _FilterPageState extends State<FilterPage> {
                       _options = _options.copyWith(minRating: 0, maxRating: 10);
                     });
                   },
-                  child: const Text('Clear', style: TextStyle(fontSize: 12)),
+                  child: Text(AppLocalizations.of(context)!.clear, style: const TextStyle(fontSize: 12)),
                 ),
             ],
           ),
@@ -175,7 +176,7 @@ class _FilterPageState extends State<FilterPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Country', style: Theme.of(context).textTheme.titleMedium),
+              Text(AppLocalizations.of(context)!.country, style: Theme.of(context).textTheme.titleMedium),
               if (_options.country != null)
                 TextButton(
                   onPressed: () {
@@ -183,7 +184,7 @@ class _FilterPageState extends State<FilterPage> {
                       _options = _options.copyWith(country: null);
                     });
                   },
-                  child: const Text('Clear', style: TextStyle(fontSize: 12)),
+                  child: Text(AppLocalizations.of(context)!.clear, style: const TextStyle(fontSize: 12)),
                 ),
             ],
           ),
@@ -191,9 +192,9 @@ class _FilterPageState extends State<FilterPage> {
             value: _options.country,
             isExpanded: true,
             items: [
-              const DropdownMenuItem<String?>(
+              DropdownMenuItem<String?>(
                 value: null,
-                child: Text('Not chosen', style: TextStyle(color: Colors.grey)),
+                child: Text(AppLocalizations.of(context)!.notChosen, style: const TextStyle(color: Colors.grey)),
               ),
               ...widget.countries.map((c) => DropdownMenuItem<String?>(value: c, child: Text(c)))
             ],
@@ -207,7 +208,7 @@ class _FilterPageState extends State<FilterPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Language', style: Theme.of(context).textTheme.titleMedium),
+              Text(AppLocalizations.of(context)!.language, style: Theme.of(context).textTheme.titleMedium),
               if (_options.language != null)
                 TextButton(
                   onPressed: () {
@@ -215,7 +216,7 @@ class _FilterPageState extends State<FilterPage> {
                       _options = _options.copyWith(language: null);
                     });
                   },
-                  child: const Text('Clear', style: TextStyle(fontSize: 12)),
+                  child: Text(AppLocalizations.of(context)!.clear, style: const TextStyle(fontSize: 12)),
                 ),
             ],
           ),
@@ -223,9 +224,9 @@ class _FilterPageState extends State<FilterPage> {
             value: _options.language,
             isExpanded: true,
             items: [
-              const DropdownMenuItem<String?>(
+              DropdownMenuItem<String?>(
                 value: null,
-                child: Text('Not chosen', style: TextStyle(color: Colors.grey)),
+                child: Text(AppLocalizations.of(context)!.notChosen, style: const TextStyle(color: Colors.grey)),
               ),
               ...widget.languages.map((l) => DropdownMenuItem<String?>(value: l, child: Text(l)))
             ],
@@ -239,7 +240,7 @@ class _FilterPageState extends State<FilterPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Sort by', style: Theme.of(context).textTheme.titleMedium),
+              Text(AppLocalizations.of(context)!.sortBy, style: Theme.of(context).textTheme.titleMedium),
               if (_options.sortBy != null)
                 TextButton(
                   onPressed: () {
@@ -247,7 +248,7 @@ class _FilterPageState extends State<FilterPage> {
                       _options = _options.copyWith(sortBy: null);
                     });
                   },
-                  child: const Text('Clear', style: TextStyle(fontSize: 12)),
+                  child: Text(AppLocalizations.of(context)!.clear, style: const TextStyle(fontSize: 12)),
                 ),
             ],
           ),
@@ -255,9 +256,9 @@ class _FilterPageState extends State<FilterPage> {
             value: _options.sortBy,
             isExpanded: true,
             items: [
-              const DropdownMenuItem<String?>(
+              DropdownMenuItem<String?>(
                 value: null,
-                child: Text('Not chosen', style: TextStyle(color: Colors.grey)),
+                child: Text(AppLocalizations.of(context)!.notChosen, style: const TextStyle(color: Colors.grey)),
               ),
               ...widget.sortOptions
                   .map((s) => DropdownMenuItem<String?>(
@@ -274,7 +275,7 @@ class _FilterPageState extends State<FilterPage> {
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () => widget.onApply(_options),
-            child: const Text('Apply'),
+            child: Text(AppLocalizations.of(context)!.apply),
           ),
         ],
       ),

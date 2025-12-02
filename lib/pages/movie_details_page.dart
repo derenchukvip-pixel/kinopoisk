@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:kinopoisk/l10n/app_localizations.dart';
 import 'package:kinopoisk/data/models/movie_details.dart';
 import 'package:kinopoisk/domain/usecases/get_movie_details_usecase.dart';
 import 'package:kinopoisk/domain/usecases/get_keywords_usecase.dart';
@@ -19,20 +20,20 @@ class MovieDetailsPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Loading...')),
+            appBar: AppBar(title: Text(AppLocalizations.of(context)!.loading)),
             body: const Center(child: CircularProgressIndicator()),
           );
         }
         if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Error')),
-            body: Center(child: Text('Error: ${snapshot.error}')),
+            appBar: AppBar(title: Text(AppLocalizations.of(context)!.error)),
+            body: Center(child: Text(AppLocalizations.of(context)!.error + ': ${snapshot.error}')),
           );
         }
         final details = snapshot.data;
         if (details == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('No Data')),
+            appBar: AppBar(title: Text(AppLocalizations.of(context)!.noData)),
             body: const SizedBox(),
           );
         }
@@ -156,19 +157,19 @@ class MovieDetailsPage extends StatelessWidget {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        return Text('Error loading keywords', style: TextStyle(color: Colors.red));
+                        return Text(AppLocalizations.of(context)!.errorLoadingKeywords, style: const TextStyle(color: Colors.red));
                       }
                       final keywords = snapshot.data ?? [];
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Keywords:',
+                            AppLocalizations.of(context)!.keywords,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 8),
                           keywords.isEmpty
-                               ? const Text('No keywords found', style: TextStyle(color: Colors.grey))
+                               ? Text(AppLocalizations.of(context)!.noKeywordsFound, style: const TextStyle(color: Colors.grey))
                               : Wrap(
                                   spacing: 8,
                                   children: keywords.map((k) => ActionChip(
