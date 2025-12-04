@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
+import 'package:kinopoisk/l10n/app_localizations.dart';
 import 'bloc/auth_bloc.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -11,13 +12,13 @@ class ProfilePage extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is! Authenticated) {
-          return const Center(child: Text('Not logged in'));
+          return Center(child: Text(AppLocalizations.of(context)!.loginError));
         }
         final user = state.user;
         return Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBar(
-            title: const Text('Profile'),
+            title: Text(AppLocalizations.of(context)!.profile),
             backgroundColor: Colors.transparent,
             elevation: 0,
           ),
@@ -69,11 +70,11 @@ class ProfilePage extends StatelessWidget {
                             ),
                             IconButton(
                               icon: const Icon(Icons.copy, size: 18),
-                              tooltip: 'Copy username',
+                              tooltip: AppLocalizations.of(context)!.username,
                               onPressed: () {
                                 Clipboard.setData(ClipboardData(text: user.email));
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Username copied!')),
+                                  SnackBar(content: Text(AppLocalizations.of(context)!.username + ' copied!')),
                                 );
                               },
                             ),
@@ -91,18 +92,18 @@ class ProfilePage extends StatelessWidget {
                             children: [
                               const Icon(Icons.favorite, color: Colors.red),
                               const SizedBox(width: 8),
-                              Text('Last favorite movie: Coming soon'),
+                              Text(AppLocalizations.of(context)!.catalog + ': Coming soon'),
                             ],
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Text('User ID: ${user.id}', style: Theme.of(context).textTheme.bodyMedium),
+                        Text(AppLocalizations.of(context)!.username + ': ${user.id}', style: Theme.of(context).textTheme.bodyMedium),
                         const SizedBox(height: 32),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             icon: const Icon(Icons.logout),
-                            label: const Text('Logout'),
+                            label: Text(AppLocalizations.of(context)!.logout),
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

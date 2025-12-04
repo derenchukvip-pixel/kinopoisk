@@ -41,7 +41,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError('Invalid credentials'));
       }
     } catch (e) {
-      emit(AuthError(e.toString()));
+      final String errorMsg;
+      if (e is Map) {
+        errorMsg = e['message']?.toString() ?? e['error']?.toString() ?? 'Unknown error';
+      } else {
+        errorMsg = e.toString();
+      }
+      emit(AuthError(errorMsg));
     }
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/auth_bloc.dart';
-// ...existing code...
+import 'package:kinopoisk/l10n/app_localizations.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -9,8 +9,6 @@ class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
-
-
 
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
@@ -32,10 +30,13 @@ class _LoginPageState extends State<LoginPage> {
     if (error.contains('SocketException')) {
       return 'No internet connection.';
     }
+    if (error.contains("_JsonMap")) {
+      return 'Unexpected server response. Please try again later.';
+    }
     return 'Unknown error: $error';
   }
 
-    @override
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -51,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Login')),
+        appBar: AppBar(title: Text(AppLocalizations.of(context)!.login)),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -59,12 +60,12 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               TextField(
                 controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Username'),
+                decoration: InputDecoration(labelText: AppLocalizations.of(context)!.username),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: InputDecoration(labelText: AppLocalizations.of(context)!.password),
                 obscureText: true,
               ),
               const SizedBox(height: 24),
@@ -79,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                             LoginRequested(_emailController.text, _passwordController.text),
                           );
                         },
-                        child: const Text('Login'),
+                        child: Text(AppLocalizations.of(context)!.login),
                       ),
                       if (state is AuthLoading)
                         const Padding(

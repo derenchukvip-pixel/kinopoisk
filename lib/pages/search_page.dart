@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kinopoisk/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/subjects.dart';
 import 'bloc/search_bloc.dart';
@@ -164,9 +165,9 @@ class SearchInputBar extends StatelessWidget {
         Expanded(
           child: TextField(
             controller: controller,
-            decoration: const InputDecoration(
-              labelText: 'Search',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.search,
+              border: const OutlineInputBorder(),
             ),
             onChanged: onQueryChanged,
             onSubmitted: onQueryChanged,
@@ -178,7 +179,7 @@ class SearchInputBar extends StatelessWidget {
           items: SearchCategory.values
               .map((cat) => DropdownMenuItem(
                     value: cat,
-                    child: Text(cat.name),
+                    child: Text(cat.name), // TODO: localize category names if needed
                   ))
               .toList(),
           onChanged: (value) {
@@ -205,12 +206,12 @@ class SearchResultsList extends StatelessWidget {
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
         if (state is SearchInitial) {
-          return const Center(child: Text('Enter a search query'));
+          return Center(child: Text(AppLocalizations.of(context)!.search + ': Enter a search query'));
         } else if (state is SearchLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is SearchLoaded) {
           if (state.results.isEmpty) {
-            return const Center(child: Text('No results found'));
+            return Center(child: Text(AppLocalizations.of(context)!.search + ': No results found'));
           }
           return NotificationListener<ScrollNotification>(
             onNotification: (notification) {
@@ -236,7 +237,7 @@ class SearchResultsList extends StatelessWidget {
                           )
                         : const Icon(Icons.movie),
                     title: Text(item.title),
-                    subtitle: Text('Rating: ${item.voteAverage.toStringAsFixed(1)}'),
+                    subtitle: Text(AppLocalizations.of(context)!.catalog + ': ${item.voteAverage.toStringAsFixed(1)}'),
                     onTap: () {
                       // ...existing code for details...
                     },
@@ -251,7 +252,7 @@ class SearchResultsList extends StatelessWidget {
                           )
                         : const Icon(Icons.tv),
                     title: Text(item.name),
-                    subtitle: Text('Rating: ${item.voteAverage.toStringAsFixed(1)}'),
+                    subtitle: Text(AppLocalizations.of(context)!.catalog + ': ${item.voteAverage.toStringAsFixed(1)}'),
                   );
                 } else if (item.runtimeType.toString() == 'Keyword') {
                   return Padding(

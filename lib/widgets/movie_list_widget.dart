@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/models/movie.dart';
+import 'package:kinopoisk/l10n/app_localizations.dart';
 
 class MovieListWidget extends StatelessWidget {
   final List<Movie> movies;
@@ -14,7 +15,7 @@ class MovieListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (movies.isEmpty) {
-      return const Center(child: Text('Нет фильмов для отображения'));
+      return Center(child: Text(AppLocalizations.of(context)!.noMovies));
     }
     return ListView.builder(
       itemCount: movies.length,
@@ -29,7 +30,7 @@ class MovieListWidget extends StatelessWidget {
                 )
               : const Icon(Icons.movie),
           title: Text(movie.title),
-          subtitle: Text('Рейтинг: ${movie.voteAverage.toStringAsFixed(1)}'),
+          subtitle: Text(AppLocalizations.of(context)!.rating + ': ${movie.voteAverage.toStringAsFixed(1)}'),
           onTap: onTap != null ? () => onTap!(movie) : null,
         );
       },
