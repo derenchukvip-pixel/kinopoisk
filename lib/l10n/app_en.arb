@@ -1,4 +1,11 @@
 {
+  "sortPopularDesc": "Popular first",
+  "sortPopularAsc": "Unpopular first",
+  "sortReleaseDesc": "New first",
+  "sortReleaseAsc": "Old first",
+  "sortRatingDesc": "High rating",
+  "sortRatingAsc": "Low rating",
+  "movieIdNotFound": "Movie ID not found",
   "appTitle": "Kinopoisk",
   "login": "Login",
   "logout": "Logout",

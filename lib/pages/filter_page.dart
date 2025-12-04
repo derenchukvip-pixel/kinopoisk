@@ -27,14 +27,25 @@ class FilterPage extends StatefulWidget {
 }
 
 class _FilterPageState extends State<FilterPage> {
-  static const Map<String, String> sortLabels = {
-    'popularity.desc': 'Popular first',
-    'popularity.asc': 'Unpopular first',
-    'release_date.desc': 'New first',
-    'release_date.asc': 'Old first',
-    'vote_average.desc': 'High rating',
-    'vote_average.asc': 'Low rating',
-  };
+  String sortLabel(String key) {
+    final l = AppLocalizations.of(context);
+    switch (key) {
+      case 'popularity.desc':
+        return l?.sortPopularDesc ?? 'Popular first';
+      case 'popularity.asc':
+        return l?.sortPopularAsc ?? 'Unpopular first';
+      case 'release_date.desc':
+        return l?.sortReleaseDesc ?? 'New first';
+      case 'release_date.asc':
+        return l?.sortReleaseAsc ?? 'Old first';
+      case 'vote_average.desc':
+        return l?.sortRatingDesc ?? 'High rating';
+      case 'vote_average.asc':
+        return l?.sortRatingAsc ?? 'Low rating';
+      default:
+        return key;
+    }
+  }
   late FilterOptions _options;
   late TextEditingController _yearController;
 

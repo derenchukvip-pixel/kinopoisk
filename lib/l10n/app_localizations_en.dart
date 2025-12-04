@@ -9,6 +9,27 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get sortPopularDesc => 'Popular first';
+
+  @override
+  String get sortPopularAsc => 'Unpopular first';
+
+  @override
+  String get sortReleaseDesc => 'New first';
+
+  @override
+  String get sortReleaseAsc => 'Old first';
+
+  @override
+  String get sortRatingDesc => 'High rating';
+
+  @override
+  String get sortRatingAsc => 'Low rating';
+
+  @override
+  String get movieIdNotFound => 'Movie ID not found';
+
+  @override
   String get appTitle => 'Kinopoisk';
 
   @override

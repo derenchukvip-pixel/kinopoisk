@@ -1,3 +1,4 @@
+import 'package:kinopoisk/l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -81,8 +82,12 @@ class AppModule extends Module {
       child: (context) {
         final movieId = Modular.args.data as int?;
         if (movieId == null) {
-          return const Scaffold(
-            body: Center(child: Text('Movie ID not found')),
+          return Scaffold(
+            body: Center(
+              child: Text(
+                AppLocalizations.of(context)?.movieIdNotFound ?? 'Movie ID not found',
+              ),
+            ),
           );
         }
         return MovieDetailsPage(movieId: movieId);

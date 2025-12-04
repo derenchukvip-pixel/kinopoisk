@@ -1,4 +1,11 @@
 {
+  "sortPopularDesc": "Сначала популярные",
+  "sortPopularAsc": "Сначала непопулярные",
+  "sortReleaseDesc": "Сначала новые",
+  "sortReleaseAsc": "Сначала старые",
+  "sortRatingDesc": "Высокий рейтинг",
+  "sortRatingAsc": "Низкий рейтинг",
+  "movieIdNotFound": "ID фильма не найден",
   "appTitle": "Кинопоиск",
   "login": "Войти",
   "logout": "Выйти",

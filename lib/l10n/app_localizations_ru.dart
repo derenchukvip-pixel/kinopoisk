@@ -9,6 +9,27 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
+  String get sortPopularDesc => 'Сначала популярные';
+
+  @override
+  String get sortPopularAsc => 'Сначала непопулярные';
+
+  @override
+  String get sortReleaseDesc => 'Сначала новые';
+
+  @override
+  String get sortReleaseAsc => 'Сначала старые';
+
+  @override
+  String get sortRatingDesc => 'Высокий рейтинг';
+
+  @override
+  String get sortRatingAsc => 'Низкий рейтинг';
+
+  @override
+  String get movieIdNotFound => 'ID фильма не найден';
+
+  @override
   String get appTitle => 'Кинопоиск';
 
   @override

@@ -95,6 +95,48 @@ abstract class AppLocalizations {
     Locale('ru')
   ];
 
+  /// No description provided for @sortPopularDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular first'**
+  String get sortPopularDesc;
+
+  /// No description provided for @sortPopularAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpopular first'**
+  String get sortPopularAsc;
+
+  /// No description provided for @sortReleaseDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'New first'**
+  String get sortReleaseDesc;
+
+  /// No description provided for @sortReleaseAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Old first'**
+  String get sortReleaseAsc;
+
+  /// No description provided for @sortRatingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'High rating'**
+  String get sortRatingDesc;
+
+  /// No description provided for @sortRatingAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Low rating'**
+  String get sortRatingAsc;
+
+  /// No description provided for @movieIdNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Movie ID not found'**
+  String get movieIdNotFound;
+
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
