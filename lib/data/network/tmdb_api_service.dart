@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import '../models/sort_option.dart';
-import '../models/genre.dart';
+import 'package:kinopoisk/data/models/sort_option.dart';
+import 'package:kinopoisk/data/models/genre.dart';
 
 // The SortOption enum and SortOptionExt extension have been moved to sort_option.dart
 

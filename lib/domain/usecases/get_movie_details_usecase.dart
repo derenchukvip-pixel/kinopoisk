@@ -1,6 +1,6 @@
 import 'package:kinopoisk/data/models/movie_details.dart';
 
-import '../../data/repositories/movie_repository.dart';
+import 'package:kinopoisk/data/repositories/movie_repository.dart';
 
 class GetMovieDetailsUseCase {
   final MovieRepository repository;

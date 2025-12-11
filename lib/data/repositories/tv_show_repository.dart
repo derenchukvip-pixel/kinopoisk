@@ -1,4 +1,4 @@
-import '../models/tv_show.dart';
+import 'package:kinopoisk/data/models/tv_show.dart';
 
 abstract class TVShowRepository {
   Future<List<TVShow>> getAiringToday();
