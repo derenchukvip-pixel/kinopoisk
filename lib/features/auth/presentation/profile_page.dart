@@ -27,8 +27,8 @@ class ProfilePage extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.7),
-                  Theme.of(context).scaffoldBackgroundColor,
+                  Colors.white.withOpacity(0.15),
+                  Colors.transparent,
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -51,14 +51,14 @@ class ProfilePage extends StatelessWidget {
                           backgroundImage: user.avatarUrl != null && user.avatarUrl!.isNotEmpty
                               ? NetworkImage(user.avatarUrl!)
                               : null,
-                          child: user.avatarUrl == null || user.avatarUrl!.isEmpty
-                              ? const Icon(Icons.person, size: 48)
-                              : null,
+              child: user.avatarUrl == null || user.avatarUrl!.isEmpty
+                ? const Icon(Icons.person, size: 48, color: Colors.white)
+                : null,
                         ),
                         const SizedBox(height: 20),
                         Text(
                           user.name?.isNotEmpty == true ? user.name! : 'No name',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -66,10 +66,10 @@ class ProfilePage extends StatelessWidget {
                           children: [
                             Text(
                               user.email,
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 18),
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 18, color: Colors.white70),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.copy, size: 18),
+                              icon: const Icon(Icons.copy, size: 18, color: Colors.white54),
                               tooltip: AppLocalizations.of(context)!.username,
                               onPressed: () {
                                 Clipboard.setData(ClipboardData(text: user.email));
@@ -84,29 +84,41 @@ class ProfilePage extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.7),
+                            color: Colors.white.withOpacity(0.08),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.favorite, color: Colors.red),
+                              const Icon(Icons.favorite, color: Colors.white),
                               const SizedBox(width: 8),
-                              Text(AppLocalizations.of(context)!.catalog + ': Coming soon'),
+                              Text(
+                                AppLocalizations.of(context)!.catalog + ': Coming soon',
+                                style: const TextStyle(color: Colors.white),
+                              ),
                             ],
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Text(AppLocalizations.of(context)!.username + ': ${user.id}', style: Theme.of(context).textTheme.bodyMedium),
+                        Text(
+                          AppLocalizations.of(context)!.username + ': ${user.id}',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white54),
+                        ),
                         const SizedBox(height: 32),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
-                            icon: const Icon(Icons.logout),
-                            label: Text(AppLocalizations.of(context)!.logout),
+                            icon: const Icon(Icons.logout, color: Colors.black),
+                            label: Text(
+                              AppLocalizations.of(context)!.logout,
+                              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                            ),
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.black,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              elevation: 0,
                             ),
                             onPressed: () {
                               context.read<AuthBloc>().add(LogoutRequested());

@@ -52,54 +52,119 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: Text(AppLocalizations.of(context)!.login)),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(labelText: AppLocalizations.of(context)!.username),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                decoration: InputDecoration(labelText: AppLocalizations.of(context)!.password),
-                obscureText: true,
-              ),
-              const SizedBox(height: 24),
-              BlocBuilder<AuthBloc, AuthState>(
-                builder: (context, state) {
-                  final error = state is AuthError ? _mapError(state.message) : null;
-                  return Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          context.read<AuthBloc>().add(
-                            LoginRequested(_emailController.text, _passwordController.text),
-                          );
-                        },
-                        child: Text(AppLocalizations.of(context)!.login),
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          title: Text(
+            AppLocalizations.of(context)!.login,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        body: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    controller: _emailController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.username,
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      filled: true,
+                      fillColor: Colors.grey[900],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Colors.white24),
                       ),
-                      if (state is AuthLoading)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 16),
-                          child: CircularProgressIndicator(),
-                        ),
-                      if (error != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Text(
-                            error,
-                            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Colors.white24),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _passwordController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.password,
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      filled: true,
+                      fillColor: Colors.grey[900],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Colors.white24),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Colors.white24),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 28),
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      final error = state is AuthError ? _mapError(state.message) : null;
+                      return Column(
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.black,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                elevation: 0,
+                              ),
+                              onPressed: () {
+                                context.read<AuthBloc>().add(
+                                  LoginRequested(_emailController.text, _passwordController.text),
+                                );
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.login,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                            ),
                           ),
-                        ),
-                    ],
-                  );
-                },
+                          if (state is AuthLoading)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16),
+                              child: CircularProgressIndicator(color: Colors.white),
+                            ),
+                          if (error != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: Text(
+                                error,
+                                style: const TextStyle(color: Colors.redAccent),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

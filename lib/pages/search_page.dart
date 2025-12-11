@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kinopoisk/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/subjects.dart';
 import 'bloc/search_bloc.dart';
 import 'package:kinopoisk/data/models/search_category.dart';
 import 'package:kinopoisk/data/models/genre.dart';
@@ -163,28 +162,62 @@ class SearchInputBar extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.search,
-              border: const OutlineInputBorder(),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(16),
             ),
-            onChanged: onQueryChanged,
-            onSubmitted: onQueryChanged,
+            child: TextField(
+              controller: controller,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.search,
+                hintStyle: const TextStyle(color: Colors.white54),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              ),
+              onChanged: onQueryChanged,
+              onSubmitted: onQueryChanged,
+            ),
           ),
         ),
-        const SizedBox(width: 8),
-        DropdownButton<SearchCategory>(
-          value: selectedCategory,
-          items: SearchCategory.values
-              .map((cat) => DropdownMenuItem(
-                    value: cat,
-                    child: Text(cat.name), // TODO: localize category names if needed
-                  ))
-              .toList(),
-          onChanged: (value) {
-            if (value != null) onCategoryChanged(value);
-          },
+        const SizedBox(width: 12),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[900],
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 8,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              canvasColor: Colors.grey[900],
+              cardColor: Colors.grey[900],
+              dialogBackgroundColor: Colors.grey[900],
+            ),
+            child: DropdownButton<SearchCategory>(
+              dropdownColor: Colors.grey[900],
+              value: selectedCategory,
+              style: const TextStyle(color: Colors.white),
+              underline: const SizedBox(),
+              borderRadius: BorderRadius.circular(16),
+              items: SearchCategory.values
+                  .map((cat) => DropdownMenuItem(
+                        value: cat,
+                        child: Text(cat.name),
+                      ))
+                  .toList(),
+              onChanged: (value) {
+                if (value != null) onCategoryChanged(value);
+              },
+            ),
+          ),
         ),
       ],
     );
@@ -228,44 +261,72 @@ class SearchResultsList extends StatelessWidget {
               itemBuilder: (context, index) {
                 final item = state.results[index];
                 if (item.runtimeType.toString() == 'Movie') {
-                  return ListTile(
-                    leading: item.posterPath != null
-                        ? Image.network(
-                            'https://image.tmdb.org/t/p/w92${item.posterPath}',
-                            width: 50,
-                            fit: BoxFit.cover,
-                          )
-                        : const Icon(Icons.movie),
-                    title: Text(item.title),
-                    subtitle: Text(AppLocalizations.of(context)!.catalog + ': ${item.voteAverage.toStringAsFixed(1)}'),
-                    onTap: () {
-                      // ...existing code for details...
-                    },
+                  return Card(
+                    color: Colors.grey[900],
+                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      leading: item.posterPath != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(
+                                'https://image.tmdb.org/t/p/w92${item.posterPath}',
+                                width: 56,
+                                height: 84,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : const Icon(Icons.movie, color: Colors.white, size: 56),
+                      title: Text(item.title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      subtitle: Text(
+                        AppLocalizations.of(context)!.catalog + ': ${item.voteAverage.toStringAsFixed(1)}',
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                      onTap: () {
+                        Modular.to.pushNamed('/details', arguments: item.id);
+                      },
+                    ),
                   );
                 } else if (item.runtimeType.toString() == 'TVShow') {
-                  return ListTile(
-                    leading: item.posterPath != null
-                        ? Image.network(
-                            'https://image.tmdb.org/t/p/w92${item.posterPath}',
-                            width: 50,
-                            fit: BoxFit.cover,
-                          )
-                        : const Icon(Icons.tv),
-                    title: Text(item.name),
-                    subtitle: Text(AppLocalizations.of(context)!.catalog + ': ${item.voteAverage.toStringAsFixed(1)}'),
+                  return Card(
+                    color: Colors.grey[900],
+                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      leading: item.posterPath != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(
+                                'https://image.tmdb.org/t/p/w92${item.posterPath}',
+                                width: 56,
+                                height: 84,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : const Icon(Icons.tv, color: Colors.white, size: 56),
+                      title: Text(item.name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      subtitle: Text(
+                        AppLocalizations.of(context)!.catalog + ': ${item.voteAverage.toStringAsFixed(1)}',
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                    ),
                   );
                 } else if (item.runtimeType.toString() == 'Keyword') {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                     child: ActionChip(
                       label: Text(item.name),
+                      backgroundColor: Colors.grey[900],
+                      labelStyle: const TextStyle(color: Colors.white),
                       onPressed: () {
                         bloc.add(SearchQueryChanged(item.name, SearchCategory.movie));
                       },
                     ),
                   );
                 } else {
-                  return ListTile(title: Text(item.toString()));
+                  return ListTile(title: Text(item.toString(), style: const TextStyle(color: Colors.white)));
                 }
               },
             ),
