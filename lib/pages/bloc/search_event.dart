@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../data/models/search_category.dart';
 import '../../data/models/filter_options.dart';
 class SearchFilterChanged extends SearchEvent {
   final FilterOptions filterOptions;
@@ -15,9 +16,10 @@ abstract class SearchEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+
 class SearchQueryChanged extends SearchEvent {
   final String query;
-  final String category;
+  final SearchCategory category;
   const SearchQueryChanged(this.query, this.category);
 
   @override

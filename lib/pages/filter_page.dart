@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import '../data/models/filter_options.dart';
+import '../data/models/genre.dart';
+import '../data/models/sort_option.dart';
 
 class FilterPage extends StatefulWidget {
   final FilterOptions initialOptions;
-  final List<Map<String, dynamic>> genres; // [{id: 28, name: 'Action'}, ...]
+  final List<Genre> genres;
   final List<String> countries;
   final List<String> languages;
-  final List<String> sortOptions;
+  final List<SortOption> sortOptions;
   final void Function(FilterOptions) onApply;
 
   const FilterPage({
@@ -87,17 +89,17 @@ class _FilterPageState extends State<FilterPage> {
           Wrap(
             spacing: 8,
             children: widget.genres.map((genre) {
-              final selected = _options.genreIds.contains(genre['id']);
+              final selected = _options.genreIds.contains(genre.id);
               return FilterChip(
-                label: Text(genre['name']),
+                label: Text(genre.name),
                 selected: selected,
                 onSelected: (val) {
                   setState(() {
                     final ids = List<int>.from(_options.genreIds);
                     if (val) {
-                      ids.add(genre['id']);
+                      ids.add(genre.id);
                     } else {
-                      ids.remove(genre['id']);
+                      ids.remove(genre.id);
                     }
                     _options = _options.copyWith(genreIds: ids);
                   });
@@ -259,8 +261,8 @@ class _FilterPageState extends State<FilterPage> {
               ),
               ...widget.sortOptions
                   .map((s) => DropdownMenuItem<String?>(
-                        value: s,
-                        child: Text(sortLabels[s] ?? s),
+                        value: s.apiValue,
+                        child: Text(s.apiValue),
                       ))
             ],
             onChanged: (val) {

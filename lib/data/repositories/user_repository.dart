@@ -1,4 +1,4 @@
-import '../models/user.dart';
+import 'package:kinopoisk/data/models/user.dart';
 
 abstract class UserRepository {
   Future<User> getUserInfo();

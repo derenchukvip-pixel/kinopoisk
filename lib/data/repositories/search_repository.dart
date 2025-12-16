@@ -1,7 +1,7 @@
-import '../models/filter_options.dart';
+import 'package:kinopoisk/data/models/filter_options.dart';
 import 'package:kinopoisk/data/models/tv_show.dart';
-import '../models/movie.dart';
-import '../models/keyword.dart';
+import 'package:kinopoisk/data/models/movie.dart';
+import 'package:kinopoisk/data/models/keyword.dart';
 
 abstract class SearchRepository {
   Future<List<Movie>> searchMovies(String query, {int page, FilterOptions? filters});
