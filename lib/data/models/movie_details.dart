@@ -25,7 +25,21 @@ class MovieDetails {
     required this.keywords,
   });
 
-  factory MovieDetails.fromJson(Map<String, dynamic> json) => _$MovieDetailsFromJson(json);
+  factory MovieDetails.fromJson(Map<String, dynamic> json) {
+    // Гарантируем, что keywords всегда список
+    final keywordsJson = json['keywords'];
+    return MovieDetails(
+      id: (json['id'] as num).toInt(),
+      title: json['title'] as String,
+      overview: json['overview'] as String,
+      posterPath: json['poster_path'] as String?,
+      releaseDate: json['release_date'] as String,
+      voteAverage: (json['vote_average'] as num).toDouble(),
+      keywords: (keywordsJson is List)
+          ? keywordsJson.map((e) => Keyword.fromJson(e as Map<String, dynamic>)).toList()
+          : <Keyword>[],
+    );
+  }
   Map<String, dynamic> toJson() => _$MovieDetailsToJson(this);
 }
 
